@@ -5,7 +5,7 @@ using Random = System.Random;
 [System.Serializable]
 public struct NoiseSettings
 {
-    private enum NoiseType { Perlin, Voronoi }
+    public enum NoiseType { Perlin, Voronoi }
 
     [SerializeField] private NoiseType m_type;
     [SerializeField] private int m_cellCount;
