@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NoiseGenerator : MonoBehaviour
 {
-    [SerializeField] private float m_scale = 2f;
+    [SerializeField] private NoiseSettings m_settings;
 
     [Header("Debug")]
     [SerializeField] private MeshRenderer m_meshRenderer = null;
@@ -14,28 +14,25 @@ public class NoiseGenerator : MonoBehaviour
     [ContextMenu("Generate")]
     private void Generate()
     {
+        //Creating Noise
+        Noise noise = m_settings.GetNoise();
+
+        //Creating Texture
         Texture2D texture = new Texture2D(RESOLUTION, RESOLUTION);
+        float[,] heightMap = noise.GetHeightMap(RESOLUTION);
         Color[] colour = new Color[RESOLUTION * RESOLUTION];
         for (var i = 0; i < colour.Length; i++)
         {
             int x = i % RESOLUTION;
             int y = i / RESOLUTION;
-            Vector2 uv = new Vector2(x, y) / RESOLUTION;
 
-            colour[i] = SampleNoise(uv);
+            colour[i] = new Color(heightMap[x, y], 0, 0, 1);
         }
 
         texture.SetPixels(colour);
         texture.Apply();
 
         m_meshRenderer.sharedMaterial.SetTexture("_MainTex", texture);
-    }
-
-    private Color SampleNoise(Vector2 uv)
-    {
-        uv *= m_scale;
-        float height = Mathf.PerlinNoise(uv.x, uv.y);
-        return new Color(height, 0, 0f, 1f);
     }
 
     private void OnValidate()
