@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NoiseGenerator : MonoBehaviour
 {
+    [SerializeField] private float m_scale = 2f;
+
     [Header("Debug")]
     [SerializeField] private MeshRenderer m_meshRenderer = null;
 
@@ -31,6 +33,13 @@ public class NoiseGenerator : MonoBehaviour
 
     private Color SampleNoise(Vector2 uv)
     {
-        return new Color(uv.x, uv.y, 0f, 1f);
+        uv *= m_scale;
+        float height = Mathf.PerlinNoise(uv.x, uv.y);
+        return new Color(height, 0, 0f, 1f);
+    }
+
+    private void OnValidate()
+    {
+        Generate();
     }
 }
